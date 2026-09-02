@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Script Output</title>
+    <style>
+        body {
+	    background-color: #121212;
+	    color: #e0e0e0;
+	    font-family: Arial, sans-serif;
+	}
+        pre {
+            background-color: #1f1f1f;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #444;
+            white-space: pre-wrap;
+        }
+        a {
+            color: #7ab8ff;
+        }
+	button:hover {
+	    background-color: #333;
+	}
+    </style>
+</head>
+<body>
+    <h2>Exit Code: {{ returncode }}</h2>
+    <pre>{{ output }}</pre>
+    <button onclick="location.href='/'">Back To Dashboard </button>
+</body>
+</html>
