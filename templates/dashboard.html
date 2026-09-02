@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Server Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            color: #ddd;
+            font-family: monospace;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 35px;
+        }
+
+        /* Container cards */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, 470px);
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .container {
+            border: 1px solid #aaa;
+            padding: 16px;
+        }
+
+        .container-name {
+            font-size: 19px;
+            margin-bottom: 25px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            margin: 9px 0;
+
+	    font-size: 16px;
+        }
+
+        .label {
+            color: #aaa;
+        }
+
+        .value {
+            color: #ddd;
+        }
+
+        /* Buttons */
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 40px;
+            margin-bottom: 50px;
+        }
+
+        button {
+            background: #1b1b1b;
+            color: #ddd;
+            border: 1px solid #555;
+            border-radius: 6px;
+            padding: 12px 25px;
+            font-family: monospace;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #292929;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Server Dashboard</h1>
+
+    <div class="dashboard">
+
+        {% for container in containers %}
+
+        <div class="container">
+
+            <div class="container-name">
+                {{ container.name }}
+            </div>
+
+            <div class="section">
+
+                <div class="row">
+                    <div class="label">State</div>
+                    <div class="value">● {{ container.state }}</div>
+                </div>
+
+                <div class="row">
+                    <div class="label">Uptime</div>
+                    <div class="value">{{ container.uptime }}</div>
+                </div>
+
+                <div class="row">
+                    <div class="label">Last restart</div>
+                    <div class="value">{{ container.last_restart }}</div>
+                </div>
+
+                <div class="row">
+                    <div class="label">Restarts</div>
+                    <div class="value">{{ container.restarts }}</div>
+                </div>
+
+            </div>
+
+            <div class="section">
+
+                <div class="row">
+                    <div class="label">CPU</div>
+                    <div class="value">{{ container.cpu }}</div>
+                </div>
+
+                <div class="row">
+                    <div class="label">Memory</div>
+                    <div class="value">{{ container.memory }}</div>
+                </div>
+
+                <div class="row">
+                    <div class="label">Network</div>
+                    <div class="value">{{ container.network }}</div>
+                </div>
+
+            </div>
+
+            <div class="section">
+
+                <div class="row">
+                    <div class="label">Health</div>
+                    <div class="value">{{ container.health }}</div>
+                </div>
+
+                <div class="row">
+                    <div class="label">Ports</div>
+                    <div class="value">{{ container.ports }}</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="buttons">
+        <button onclick="location.href='/run_helloworld'">Hello world</button>
+    </div>
+
+</body>
+</html>

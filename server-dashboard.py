@@ -12,18 +12,17 @@ scripts = {
 
 def docker_list_container():
     docker_list = {}
-    result = subprocess.run(["docker","ps","-q"], capture_output = True, text = True)
+    result = subprocess.run(["docker","ps","-aq"], capture_output = True, text = True)
     for index, val in enumerate(result.stdout.splitlines()):
         docker_list[index] = val
     return docker_list
 
-containers = []
-
-def container_getinfo(docker_list):
-    container_info = {}
+def container_getinfo(docker_list,containers):
     for index in docker_list.values():
         if not index:
             continue
+        
+        container_info = {} 
 
         result = subprocess.run(["docker","inspect",index], capture_output = True, text = True) 
         data = json.loads(result.stdout)[0]
@@ -47,7 +46,11 @@ def container_getinfo(docker_list):
 
 @app.route('/', methods = ['GET'])
 def home():
-    return render_template('index.html')
+    containers = []
+    docker_list = docker_list_container()
+    container_getinfo(docker_list,containers)
+
+    return render_template('dashboard.html', containers = containers)
 
 @app.route('/run_helloworld', methods = ['GET'])
 def run_helloworld():
@@ -61,7 +64,5 @@ def run_helloworld():
                            output=output,
                            returncode = ret_code)
 
-if __name__ == '__main__':
-    docker_list = docker_list_container()
-    container_getinfo(docker_list)
+if __name__ == '__main__': 
     app.run(host = '0.0.0.0', port=5000, debug=True)

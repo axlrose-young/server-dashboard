@@ -1,31 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Script Output</title>
+    <title>Script Result</title>
+
     <style>
         body {
-	    background-color: #121212;
-	    color: #e0e0e0;
-	    font-family: Arial, sans-serif;
-	}
-        pre {
-            background-color: #1f1f1f;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #444;
+            margin: 0;
+            background: #111;
+            color: #ddd;
+            font-family: monospace;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 45px;
+            margin-bottom: 40px;
+        }
+
+        .output-card {
+            width: 85%;
+            height: 600px;
+            margin: 0 auto;
+
+            border: 1px solid #aaa;
+
+            display: flex;
+            flex-direction: column;
+
+            box-sizing: border-box;
+        }
+
+        .output {
+            flex: 1;
+            padding: 25px;
+            overflow: auto;
+	    font-size: 20px;
+
             white-space: pre-wrap;
+            word-wrap: break-word;
+
+            background: #111;
         }
-        a {
-            color: #7ab8ff;
+
+        .exit-code {
+            border-top: 1px solid #555;
+            padding: 15px 25px;
+            background: #1b1b1b;
+	    font-size: 18px;
         }
-	button:hover {
-	    background-color: #333;
-	}
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 35px;
+        }
+
+        button {
+            background: #1b1b1b;
+            color: #ddd;
+
+            border: 1px solid #555;
+            border-radius: 6px;
+
+            padding: 12px 25px;
+
+            font-family: monospace;
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #292929;
+        }
     </style>
 </head>
+
 <body>
-    <h2>Exit Code: {{ returncode }}</h2>
-    <pre>{{ output }}</pre>
-    <button onclick="location.href='/'">Back To Dashboard </button>
+
+    <h1>Script Result</h1>
+
+    <div class="output-card">
+
+        <div class="output">
+{{ output }}
+        </div>
+
+        <div class="exit-code">
+            Exit Code: {{ returncode }}
+        </div>
+
+    </div>
+
+    <div class="buttons">
+        <form action="/" method="get">
+            <button type="submit">Back To Dashboard</button>
+        </form>
+    </div>
+
 </body>
 </html>
