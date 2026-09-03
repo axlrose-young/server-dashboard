@@ -76,5 +76,3 @@ echo -e "\nStorage\n"
 pprint "$(root_mount)" "$(root_storage) used"
 pprint "$(backup_mount)" "$(backup_storage) used"
 
-echo -e "\nNetwork\n"
-pprint
