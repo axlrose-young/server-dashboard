@@ -6,8 +6,10 @@ import json
 app = Flask(__name__)
 
 scripts = {
-    "helloworld" : "/home/axlrose/projects/server/scripts/hello-world.sh" 
-    ,"err_test":"/home/axlrose/projects/server/scripts/err.sh"
+    "helloworld" : "/home/maintainer/server-dashboard/scripts/hello-world.sh", 
+    "sys-info": "/home/maintainer/server-dashboard/scripts/sys-info.sh",
+    "sys-update": "/home/maintainer/server-dashboard/scripts/sys-update.sh",
+    "disk-health":"/home/maintainer/server-dashboard/scripts/disk-health.sh"
 }
 
 def docker_list_container():
@@ -35,12 +37,25 @@ def container_getinfo(docker_list,containers):
             started.replace("Z", "+00:00")
         )
 
+        last_restart = started_time.strftime("%d-%m-%Y %H:%M:%S")
+
         uptime = datetime.now(timezone.utc) - started_time
+        restarts = data["RestartCount"]
+        health = data["State"].get("Health", {}).get("Status", "no healthcheck")
+
+        ports = []
+        for port in data["NetworkSettings"]["Ports"].values():
+            if port:
+                ports.append(port[0]["HostPort"])
+        ports = ", ".join(ports)
 
         container_info["name"] = name
         container_info["state"] = state
         container_info["uptime"] = uptime
-        container_info["last_restart"] = started        
+        container_info["last_restart"] = last_restart        
+        container_info["restarts"] = restarts        
+        container_info["health"] = health        
+        container_info["ports"] = ports        
 
         containers.append(container_info)
 
@@ -54,15 +69,40 @@ def home():
 
 @app.route('/run_helloworld', methods = ['GET'])
 def run_helloworld():
-    result = subprocess.run(["bash",scripts["err_test"]], 
-                   capture_output = True,
-                   text = True) 
+    result = subprocess.run(["bash",scripts["helloworld"]], 
+                   capture_output = True, text = True) 
 
     output = result.stdout + result.stderr
     ret_code = result.returncode
     return render_template('result.html', 
-                           output=output,
-                           returncode = ret_code)
+                           output=output, returncode = ret_code)
+
+@app.route('/sys-info', methods = ['GET'])
+def system_info():
+    result = subprocess.run(["bash",scripts["sys-info"]],
+                            capture_output = True, text = True)
+    output = result.stdout + result.stderr
+    ret_code = result.returncode
+    return render_template('result.html',
+                           output=output, returncode = ret_code)
+
+@app.route('/sys-update', methods = ['GET'])
+def system_update():
+    result = subprocess.run(["bash",scripts["sys-update"]],
+                            capture_output = True, text = True)
+    output = result.stdout + result.stderr
+    ret_code = result.returncode
+    return render_template('result.html',
+                           output=output, returncode = ret_code)
+
+@app.route('/disk-health', methods = ['GET'])
+def disk_health():
+    result = subprocess.run(["sudo","bash",scripts["disk-health"]],
+                            capture_output = True, text = True)
+    output = result.stdout + result.stderr
+    ret_code = result.returncode
+    return render_template('result.html',
+                           output=output, returncode = ret_code)
 
 if __name__ == '__main__': 
     app.run(host = '0.0.0.0', port=5000, debug=True)

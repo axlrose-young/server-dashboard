@@ -122,25 +122,6 @@
             <div class="section">
 
                 <div class="row">
-                    <div class="label">CPU</div>
-                    <div class="value">{{ container.cpu }}</div>
-                </div>
-
-                <div class="row">
-                    <div class="label">Memory</div>
-                    <div class="value">{{ container.memory }}</div>
-                </div>
-
-                <div class="row">
-                    <div class="label">Network</div>
-                    <div class="value">{{ container.network }}</div>
-                </div>
-
-            </div>
-
-            <div class="section">
-
-                <div class="row">
                     <div class="label">Health</div>
                     <div class="value">{{ container.health }}</div>
                 </div>
@@ -162,6 +143,7 @@
         <button onclick="location.href='/run_helloworld'">Hello world</button>
         <button onclick="location.href='/sys-info'">System Info</button>
         <button onclick="location.href='/sys-update'">System Update</button>
+        <button onclick="location.href='/disk-health'">Disk Health Check</button>
     </div>
 
 </body>
