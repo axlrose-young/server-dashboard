@@ -3,7 +3,7 @@
 # Perfoms system updates
 # Script run using sudo which removes redudant sudo usage
 
-apt update
-apt upgrade -y
-apt autoremove -y
-apt autoclean 
+apt-get update
+apt-get upgrade -y
+apt-get autoremove -y
+apt-get autoclean 

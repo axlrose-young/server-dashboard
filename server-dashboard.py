@@ -6,10 +6,10 @@ import json
 app = Flask(__name__)
 
 scripts = {
-    "helloworld" : "/home/maintainer/server-dashboard/scripts/hello-world.sh", 
     "sys-info": "/home/maintainer/server-dashboard/scripts/sys-info.sh",
     "sys-update": "/home/maintainer/server-dashboard/scripts/sys-update.sh",
-    "disk-health":"/home/maintainer/server-dashboard/scripts/disk-health.sh"
+    "disk-health":"/home/maintainer/server-dashboard/scripts/disk-health.sh",
+    "immich-bak": "/home/maintainer/server-dashboard/scripts/immich-bak.sh"
 }
 
 def docker_list_container():
@@ -88,7 +88,7 @@ def system_info():
 
 @app.route('/sys-update', methods = ['GET'])
 def system_update():
-    result = subprocess.run(["bash",scripts["sys-update"]],
+    result = subprocess.run(["sudo",scripts["sys-update"]],
                             capture_output = True, text = True)
     output = result.stdout + result.stderr
     ret_code = result.returncode
@@ -97,12 +97,22 @@ def system_update():
 
 @app.route('/disk-health', methods = ['GET'])
 def disk_health():
-    result = subprocess.run(["sudo","bash",scripts["disk-health"]],
+    result = subprocess.run(["sudo",scripts["disk-health"]],
                             capture_output = True, text = True)
     output = result.stdout + result.stderr
     ret_code = result.returncode
     return render_template('result.html',
                            output=output, returncode = ret_code)
+
+@app.route('/immich-bak', methods = ['GET'])
+def immich_bak():
+    result = subprocess.run(["sudo",scripts["immich-bak"]],
+                            capture_output = True, text = True)
+    output = result.stdout + result.stderr
+    ret_code = result.returncode
+    return render_template('result.html',
+                           output=output, returncode = ret_code)
+
 
 if __name__ == '__main__': 
     app.run(host = '0.0.0.0', port=5000, debug=True)
