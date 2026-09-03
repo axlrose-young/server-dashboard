@@ -6,11 +6,27 @@ import json
 app = Flask(__name__)
 
 scripts = {
-    "sys-info": "/home/maintainer/server-dashboard/scripts/sys-info.sh",
+    "sys-info": "/home/maintainer/server-dashboard/scripts/sys-info.sh" 
+}
+
+sudo_scripts = {
     "sys-update": "/home/maintainer/server-dashboard/scripts/sys-update.sh",
     "disk-health":"/home/maintainer/server-dashboard/scripts/disk-health.sh",
     "immich-bak": "/home/maintainer/server-dashboard/scripts/immich-bak.sh"
 }
+
+def run_script(my_script):
+    if my_script in sudo_scripts:
+        print("yes")
+        command = ["sudo",sudo_scripts[my_script]]
+    else:
+        print("no") 
+        command = ["bash",scripts[my_script]]
+
+    result = subprocess.run(command, capture_output = True, text = True)
+    output = result.stdout + result.stderr
+    ret_code = result.returncode
+    return render_template('result.html',output=output, returncode = ret_code)
 
 def docker_list_container():
     docker_list = {}
@@ -67,52 +83,21 @@ def home():
 
     return render_template('dashboard.html', containers = containers)
 
-@app.route('/run_helloworld', methods = ['GET'])
-def run_helloworld():
-    result = subprocess.run(["bash",scripts["helloworld"]], 
-                   capture_output = True, text = True) 
-
-    output = result.stdout + result.stderr
-    ret_code = result.returncode
-    return render_template('result.html', 
-                           output=output, returncode = ret_code)
-
 @app.route('/sys-info', methods = ['GET'])
 def system_info():
-    result = subprocess.run(["bash",scripts["sys-info"]],
-                            capture_output = True, text = True)
-    output = result.stdout + result.stderr
-    ret_code = result.returncode
-    return render_template('result.html',
-                           output=output, returncode = ret_code)
+    return run_script("sys-info")
 
 @app.route('/sys-update', methods = ['GET'])
 def system_update():
-    result = subprocess.run(["sudo",scripts["sys-update"]],
-                            capture_output = True, text = True)
-    output = result.stdout + result.stderr
-    ret_code = result.returncode
-    return render_template('result.html',
-                           output=output, returncode = ret_code)
+    return run_script("sys-update")
 
 @app.route('/disk-health', methods = ['GET'])
 def disk_health():
-    result = subprocess.run(["sudo",scripts["disk-health"]],
-                            capture_output = True, text = True)
-    output = result.stdout + result.stderr
-    ret_code = result.returncode
-    return render_template('result.html',
-                           output=output, returncode = ret_code)
+    return run_script("disk-health")
 
 @app.route('/immich-bak', methods = ['GET'])
 def immich_bak():
-    result = subprocess.run(["sudo",scripts["immich-bak"]],
-                            capture_output = True, text = True)
-    output = result.stdout + result.stderr
-    ret_code = result.returncode
-    return render_template('result.html',
-                           output=output, returncode = ret_code)
-
+   return run_script("immich-bak") 
 
 if __name__ == '__main__': 
-    app.run(host = '0.0.0.0', port=5000, debug=True)
+    app.run(host = '0.0.0.0', port=5000)
